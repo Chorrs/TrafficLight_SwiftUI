@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-@main
+@main //это ключевое слово, означающее entry point нашей программы: место, с которого программа начнёт выполняться. Его можно переносить
+
 struct TrafficLight_SwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
