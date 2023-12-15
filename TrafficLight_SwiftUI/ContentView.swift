@@ -7,53 +7,58 @@
 
 import SwiftUI
 
+enum CurrentLight {
+    case off, red, yellow, green
+}
+
 struct ContentView: View {
-   private let colorOff = 0.2
-   private let colorOn = 1.0
-    
-    @State private var redLightOpacity = 0.2
-    @State private var yellowLightOpacity = 0.2
-    @State private var greenLightOpacity = 0.2
-    
-    @State private var buttonText = "Start"
+    @State private var currentLight: CurrentLight = .off
+    @State private var buttonText = "START"
     
     var body: some View {
         ZStack {
             Color.gray
                 .ignoresSafeArea()
             
-            VStack {
-                TrafficLightView(color: .red).opacity(redLightOpacity)
+            VStack(spacing: 20) {
+                TrafficLightView(color: .red, opacity: currentLight == .red ? 1 : 0.2 )
                     .padding(.bottom, 18)
-                TrafficLightView(color: .yellow).opacity(yellowLightOpacity)
+                TrafficLightView(color: .yellow, opacity: currentLight == .yellow ? 1 : 0.2 )
                     .padding(.bottom, 18)
-                TrafficLightView(color: .green).opacity(greenLightOpacity)
+                TrafficLightView(color: .green, opacity: currentLight == .green ? 1 : 0.2)
                 
                 Spacer()
                 
-             ButtonView(buttonText: buttonText, buttonAction: changeColor)
-                
+                ButtonView(buttonText: buttonText) {
+                    if buttonText == "START" {
+                        buttonText = "NEXT"
+                    }
+                    nextColor()
+                    
+                }
             }
             .padding()
         }
-        .padding()
+    }
+    
+    
+    private func nextColor() {
+        switch currentLight {
+        case .off: 
+            currentLight = .red
+        case .red:
+            currentLight = .yellow
+        case .yellow:
+            currentLight = .green
+        case .green:
+            currentLight = .red
+        }
     }
 }
 
-extension ContentView {
-    private func changeColor() {
-        buttonText = "Next"
-        
-        if redLightOpacity == colorOn {
-            redLightOpacity = colorOff
-            yellowLightOpacity = colorOn
-        } else if yellowLightOpacity == colorOn {
-            yellowLightOpacity = colorOff
-            greenLightOpacity = colorOn
-        } else {
-            greenLightOpacity = colorOff
-            redLightOpacity = colorOn
-        }
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
 //#Preview {
